@@ -1,0 +1,222 @@
+._historygraph_page_main_container {
+    width: 98vw;
+    height: 100%;
+    padding: 20px;
+    padding-top: 5px;
+    color: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #ffffff; 
+  }
+  
+  ._historygraph_page_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px 0;
+    margin-bottom: 5px;
+  }
+  
+  ._historygraph_page_title {
+    font-size: 22px;
+    font-weight: 600;
+    color: #000000; 
+  }
+  
+  ._historygraph_page_close {
+    cursor: pointer;
+    color: #ff4d4d;
+    font-size: 24px;
+    transition: color 0.3s ease;
+  }
+  
+  ._historygraph_page_close:hover {
+    color: #ff7878;
+  }
+  
+  ._historygraph_page_content {
+    width: 100%;
+  }
+  
+  ._historygraph_controls_container {
+    padding: 20px;
+    background: #0f172a;
+    border-radius: 15px;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    margin-bottom: 10px;
+    position: relative;
+    z-index: 10; 
+  }
+  
+  ._historygraph_label {
+    color: #ffffff; 
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  ._historygraph_date_filter_row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  
+  ._historygraph_datepicker_wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative; 
+    min-width: 150px; 
+  }
+  
+  ._historygraph_datepicker_wrapper.from-to-date {
+    z-index: 30; 
+  }
+  
+  ._historygraph_datepicker_wrapper.time-of-day {
+    z-index: 20; 
+  }
+  
+  ._historygraph_datepicker_wrapper_zindex .react-datepicker-popper {
+    z-index: 1000 !important; 
+  }
+  
+  ._historygraph_datepicker {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #4b5e91;
+    border-radius: 8px;
+    background: #1e293b;
+    color: #ffffff;
+    font-size: 14px;
+    transition: all 0.3s ease;
+  }
+  
+  ._historygraph_datepicker:focus {
+    border-color: #00d4ff;
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+    outline: none;
+  }
+  
+  ._historygraph_filter_selector {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+  }
+  
+  ._historygraph_dropdown {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #4b5e91;
+    border-radius: 8px;
+    background: #1e293b;
+    color: #e0e0e0;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  ._historygraph_dropdown:hover,
+  ._historygraph_dropdown:focus {
+    border-color: #ff007a;
+    box-shadow: 0 0 10px rgba(255, 0, 122, 0.5);
+  }
+  
+  ._historygraph_button_group {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+  }
+  
+  ._historygraph_submit_btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    /* background: #ff007a; */
+    background: #ff0000;
+    color: #ffffff;
+  }
+  
+  ._historygraph_submit_btn:hover {
+    /* transform: scale(1.05); */
+    background: #d70101;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  }
+  
+  ._historygraph_submit_btn:active {
+    transform: scale(0.98);
+  }
+  
+  ._historygraph_chart_container {
+    /* margin-bottom: 20px; */
+    border: 4px solid #0f172a;
+    border-radius: 8px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    overflow: hidden;
+    z-index: 0; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  @media (max-width: 800px) {
+    ._historygraph_page_main_container {
+      padding: 10px;
+    }
+  
+    ._historygraph_date_filter_row {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    ._historygraph_datepicker_wrapper,
+    ._historygraph_filter_selector {
+      width: 100%;
+      max-width: 300px;
+      margin: 10px 0;
+    }
+  }
+
+  /* Add these styles to your existing CSS */
+._historygraph_download_btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #28a745;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  ._historygraph_download_btn:hover {
+    /* transform: scale(1.05); */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    background: #218838; 
+  }
+  
+  ._historygraph_download_btn:active {
+    transform: scale(0.98);
+  }
+  
+  ._historygraph_excel_icon {
+    font-size: 18px;
+  }

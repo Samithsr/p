@@ -1,0 +1,9 @@
+.spinner-container.small {
+    padding: 5px;
+  }
+  
+  .spinner-container.small .spinner {
+    width: 20px;
+    height: 20px;
+    border-width: 2px;
+  }

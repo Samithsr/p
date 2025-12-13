@@ -1,0 +1,1470 @@
+
+/* historygraph style starts here */
+._viewgraph_history_main_container {
+    overflow: hidden;
+    border: 2px solid rgb(18, 18, 90);
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.157);
+    border-radius: 20px;
+}
+._historygraph_controls {
+    display: flex;
+    justify-content: center;
+    padding: 15px 0;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+._historygraph_date-pickers {
+    z-index: 999999999;
+    display: flex;
+    gap: 10px;
+}
+._historygraph_date-pickers input {
+    border-radius: 5px;
+    border: 2px solid rgba(128, 128, 128, 0.425);
+    outline: none;
+    padding: 4px 5px;
+    text-align: center;
+}
+._historygraph_dropdown select {
+    border-radius: 5px;
+    border: 2px solid rgba(128, 128, 128, 0.425);
+    outline: none;
+    padding: 4px 5px;
+    text-align: center;
+}
+._historygraph_apply-btn {
+    height: 30px;
+    width: 100px;
+    outline: none;
+    border: none;
+    background: red;
+    color: white;
+    border-radius: 4px;
+    transition: all 0.3s ease-in-out;
+}
+._historygraph_apply-btn:hover {
+    background: rgb(229, 1, 1);
+}
+/* historygraph style ends here */
+
+.users_main_container {
+    display: grid;
+    grid-template-rows: auto auto;
+}
+._viewgraph_downloadimg_csv_btn_container {
+    display: flex;
+    justify-content: end;
+    gap: 10px;
+    padding-right: 20px;
+}
+._viewgraph_downloadimg_csv_btn_container > button {
+    border: none;
+    outline: none;
+    padding: 4px 5px;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    border-radius: 4px;
+    border: 2px solid rgba(128, 128, 128, 0.303);
+    background: white;
+    color: rgba(0, 0, 0, 0.685);
+}
+/* SmallGraph style starts here */
+.allusers_favorites_main_container {
+    width: 97vw;
+}
+.allusers_favorites_main_btn_container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+}
+.allusers_favorites_main_btn_container > div {
+    max-width: min-content;
+    padding: 4px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.23);
+    display: flex;
+    flex-wrap: nowrap;
+}
+.allusers_favorites_main_btn_container > div > button {
+    height: 35px;
+    width: 120px;
+    font-size: 14px;
+    background: transparent;
+    outline: none;
+    border: none;
+    transition: all 0.3s ease-in-out;
+}
+.allusers_favorites_digitalmeter_container {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 40px;
+    gap: 40px;
+}
+.allusers_favorites_digitalmeter_container > div {
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.405);
+    overflow: hidden;
+}
+.allusers_favorites_main_active_btn {
+    color: white;
+    position: relative;
+    background: orange !important;
+}
+.allusers_favorites_main_active_btn::after {
+    content: " ";
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background: white;
+    border-radius: 50%;
+    left: 44%;
+    right: 50%;
+    animation: activeFavBtn 0.5s linear 0s forwards normal;
+}
+@keyframes activeFavBtn {
+    from {
+        opacity: 0;
+        bottom: -10px;
+    }
+    to {
+        opacity: 1;
+        bottom: -10px;
+    }
+}
+.users_small_graphs_primary_container {
+    padding: 50px 5px;
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+    height: 100%;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+
+.users_small_graphs_secondary_container {
+    width: 730px;
+    height: 290px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.372);
+    position: relative;
+}
+
+.users_small_graphs_favorite_tab_switch_container {
+    position: absolute;
+    top: 0;
+    max-width: min-content;
+    z-index: 99999;
+    transform: translateY(-99%) translateX(-1px);
+    display: flex;
+    border-radius: 5px;
+}
+.users_small_graphs_favorite_tab_switch_container > div {
+    padding: 2px 15px;
+    background: purple;
+    cursor: pointer;
+    color: white;
+    border: 2px solid purple;
+    font-size: 16px;
+}
+.users_small_graphs_favorite_tab_switch_container > div:first-child {
+    border-top-left-radius: 5px;
+}
+.users_small_graphs_favorite_tab_switch_container > div:last-child {
+    border-top-right-radius: 5px;
+}
+.users_small_graphs_favorite_tab_switch_active {
+    color: red !important;
+    background: white !important;
+    border-bottom: 2px solid transparent !important;
+}
+.users_small_graphs_favorite_tab_switch_container > div:hover {
+    color: white !important;
+    background: red !important;
+    border: 2px solid transparent;
+}
+.users_graphs_topic_name {
+    position: absolute;
+    top: 0;
+    z-index: 9999;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.users_graphs_topic_name > p {
+    margin: 0;
+    font-size: 16px;
+    color: purple;
+}
+.users_graphs_view_edit_icon_container {
+    position: absolute;
+    max-width: min-content;
+    height: 100%;
+    left: 0;
+    top: 0;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    padding: 2px;
+}
+.users_graphs_view_edit_icon_container > div {
+    padding: 3px 5px;
+    /* background: rgba(207, 207, 248, 0.385); */
+    cursor: pointer;
+    font-size: 20px;
+}
+
+/* SmallGraph style ends here */
+
+/* favorites digital view style starts here */
+.allusers_favorite_digital_meter_container {
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+.allusers_favorite_digital_meter_prev_container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    height: 100%;
+    padding: 0 15px;
+    display: flex;
+    user-select: none;
+    align-items: center;
+}
+.allusers_favorite_digital_meter_next_container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    padding: 0 15px;
+    height: 100%;
+    display: flex;
+    user-select: none;
+    align-items: center;
+}
+.allusers_favorite_digital_meter_content_container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.allusers_favorite_digital_meter_content_container > p {
+    margin: 0;
+    font-size: 20px;
+    color: gray;
+}
+/* favorites digital view style ends here */
+
+/* allusers digital view all topics starts here */
+.allusers_digitalview_main_container {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+    gap: 20px;
+}
+.allusers_digitalview_main_container > div {
+    border-radius: 4px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.285);
+}
+/* allusers digital view all topics ends here */
+
+/*                            AllOperator new section starts here                     */
+
+/* radio button style starts here */
+
+/* radio button style ends here */
+/*                            AllOperator new section ends here                     */
+
+/* single user dashboard style starts here */
+.singleuserdashboard_main_container > div:first-child {
+    width: 97.5vw;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    padding-bottom: 0;
+    color: gray;
+    font-size: 22px;
+    text-transform: capitalize;
+    font-weight: bold;
+}
+.singleuserdashboard_close_icon {
+    cursor: pointer;
+}
+/* single user dashboard style ends here */
+
+/* ViewGraph style starts here */
+._viewgraph_main_container {
+    width: 96vw;
+    height: 100%;
+    padding: 0 5px;
+    padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+}
+._viewgraph_main_live_and_history_container {
+    display: flex;
+    justify-content: center;
+}
+._viewgraph_main_container > header {
+    height: 6vh;
+    width: 100%;
+    background: rgb(7, 10, 40);
+    color: white;
+    display: flex;
+    padding: 0 20px;
+    justify-content: space-between;
+    font-size: 20px;
+    border: 4px solid rgb(7, 10, 40);
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+._viewgraph_main_container > header > div {
+    columns: white;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+._viewgraph_main_container > header > div:last-child {
+    cursor: pointer;
+}
+._view_graph_download_current_plot_btn_container {
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    padding: 15px 20px;
+    gap: 10px;
+}
+._view_graph_download_current_plot_btn_container > button {
+    padding: 4px 10px;
+    border: 2px solid rgba(128, 128, 128, 0.395);
+    border-radius: 4px;
+    background: white;
+    color: rgb(78, 78, 78);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+._view_graph_download_current_plot_btn_container > button:hover {
+    border: 2px solid gray;
+    color: black;
+}
+/* ._viewgraph_main_container > header */
+._viewgraph_main_container > div {
+    /* box-shadow: 0 0 4px black; */
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    height: 100%;
+    overflow: hidden;
+    border: 2px solid rgb(7, 10, 40);
+}
+/* ViewGraph style ends here */
+/* edit graph starts here */
+.edit-graph-container {
+    padding: 1rem;
+    width: 98vw;
+    margin: 0 auto;
+    background: rgb(255, 255, 255);
+    height: 100%;
+  }
+  
+  .edit-graph-card {
+    border: 2px solid rgb(7, 10, 40);
+    border-radius: 20px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .edit-graph-header {
+    height: 60px;
+    width: 100%;
+    background: rgb(7, 10, 40);
+    color: white;
+    display: flex;
+    padding: 0 20px;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+  
+  .edit-graph-close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+  }
+  
+  .edit-graph-content {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+  }
+  
+  .graph-wrapper {
+    width: 100%;
+    margin-bottom: 1.5rem;
+  }
+  
+  .threshold-controls {
+    width: 100%;
+  }
+  
+  .threshold-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+    padding: 1rem;
+  }
+  
+  .threshold-title {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #333;
+  }
+  
+  .threshold-selector {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .threshold-dropdown {
+    width: 100%;
+    border-radius: 50px;
+    height: 40px;
+    text-align: center;
+    outline: none;
+    border: 2px solid rgb(7, 10, 40);
+    font-size: 1rem;
+    padding: 0 1rem;
+    background-color: white;
+  }
+  
+  .threshold-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .threshold-input-group {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+  }
+  
+  .threshold-input {
+    flex: 1;
+    text-align: center;
+    border: 1px solid rgb(7, 10, 40);
+    border-radius: 50px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  
+  .threshold-input:focus {
+    border-color: #4a90e2;
+  }
+  
+  .threshold-color-select {
+    border-radius: 4px;
+    font-size: 1rem;
+    padding: 0.5rem;
+    border: 1px solid rgb(7, 10, 40);
+    background-color: white;
+  }
+  
+  .threshold-buttons {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+  
+  .btn-clear, .btn-save {
+    padding: 0.5rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  
+  .btn-clear {
+    background: #e74c3c;
+  }
+  
+  .btn-clear:hover {
+    background: #c0392b;
+  }
+  
+  .btn-save {
+    background: #2c3e50;
+  }
+  
+  .btn-save:hover {
+    background: #1a252f;
+  }
+  
+  @media (min-width: 768px) {
+    .edit-graph-content {
+      flex-direction: row;
+      gap: 2rem;
+    }
+    
+    .graph-wrapper {
+      flex: 1;
+      margin-bottom: 0;
+    }
+    
+    .threshold-controls {
+      flex: 1;
+      max-width: 400px;
+    }
+    
+    .threshold-form {
+      justify-content: center;
+      height: 100%;
+      padding: 2rem 1rem;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .edit-graph-card {
+      height: auto;
+    }
+    
+    .edit-graph-content {
+      height: calc(100% - 60px);
+    }
+  }
+/* edit graph ends here */
+/* change password section starts here */
+.allusers_change_password_container {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    z-index: 9999999;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.allusers_change_password_logo_container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.allusers_change_password_logo_container > div {
+    width: 80px;
+    height: 80px;
+    border-radius: 50px;
+}
+.allusers_change_password_container > div {
+    width: 25vw;
+    min-height: 20px;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-radius: 4px;
+    padding: 20px 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.219);
+}
+.allusers_change_password_container > div > p {
+    margin: 0;
+    text-align: center;
+    font-size: 22px;
+    transform: translateY(-10px);
+}
+.allusers_change_password_input_container {
+    display: flex;
+    flex-direction: column;
+}
+.allusers_change_password_input_container > input {
+    padding: 5px 10px;
+    border-radius: 50px;
+    border: none;
+    outline: none;
+    border: 2px solid rgba(12, 12, 52, 0.786);
+}
+.allusers_change_password_button_container {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-top: 15px;
+}
+.allusers_change_password_button_container > button {
+    border: none;
+    outline: none;
+    padding: 7px 0;
+    border-radius: 5px;
+    border: 2px solid rgba(128, 128, 128, 0.377);
+    transition: all 0.3s ease-in-out;
+}
+.allusers_change_password_button_container > button:first-child {
+    background: #34495e;
+    color: white;
+}
+.allusers_change_password_button_container > button:first-child:hover {
+    background: #2a3b4b;
+}
+.allusers_change_password_button_container > button:last-child {
+    background: white;
+    color: gray;
+}
+.allusers_change_password_button_container > button:last-child:hover {
+    border: 2px solid rgba(0, 0, 0, 0.468);
+    color: black;
+}
+/* change password section ends here */
+/* all users style starts here  */
+.allusers_dashboard_main_container {
+    position: relative;
+}
+.watchlist_remove_model_container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    backdrop-filter: blur(5px);
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.watchlist_remove_model_container > div {
+    width: 350px;
+    min-height: 30px;
+    background: white;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.288);
+    padding: 10px;
+}
+.watchlist_remove_model_container > div > p {
+    margin: 0;
+    text-align: center;
+    padding: 15px 0;
+}
+.watchlist_remove_model_container > div > div {
+    margin: 15px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.watchlist_remove_model_container > div > div > button:first-child {
+    border: none;
+    outline: none;
+    color: white;
+    background: red;
+    cursor: pointer;
+    padding: 5px 0;
+    border-radius: 5px;
+}
+.watchlist_remove_model_container > div > div > button:last-child {
+    background: gray;
+    color: white;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 5px 0;
+    border-radius: 5px;
+}
+.alluser_alloperators_container {
+    width: 97.5vw;
+    overflow-x: auto;
+    overflow-y: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.242);
+    border-radius: 5px;
+    margin: 20px 0;
+}
+.tradingview-widget-container__logo {
+    display: none !important;
+}
+
+.alluser_alloperators_container::-webkit-scrollbar {
+    height: 8px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.alluser_alloperators_container::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+}
+
+.alluser_alloperators_container::-webkit-scrollbar:vertical {
+    display: none;
+}
+
+.alluser_alloperators_scrollable-table {
+    min-width: 900px;
+}
+.alluser_alloperators_table {
+    width: 100%;
+}
+.alluser_alloperators_table > thead > tr {
+    background: #34495e;
+    color: white;
+}
+.alluser_alloperators_table > thead > tr > th {
+    padding: 12px 15px;
+    text-align: center;
+    text-wrap: no-wrap;
+}
+.alluser_alloperators_table > tbody > tr:nth-child(odd) {
+    background: #f9fafd;
+}
+.alluser_alloperators_table > tbody > tr:nth-child(even) {
+    background: #ffffff;
+}
+.alluser_alloperators_table > tbody > tr > td {
+    padding: 10px 15px;
+    text-align: center;
+    border: 1px solid rgba(128, 128, 128, 0.269);
+}
+.alluser_alloperators_table > tbody > tr:hover {
+    background: #f1c404;
+}
+.allusers_dashboard_live_data_th {
+    position: relative;
+}
+.allusers_dashboard_live_data_th:after {
+    content: " ";
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    right: 45%;
+    bottom: 12%;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.289);
+    animation: liveDot 1s infinite 0s forwards normal running;
+}
+@keyframes liveDot {
+    0% {
+        background-color: rgb(0, 248, 25);
+    }
+    50% {
+        background-color: rgba(0, 0, 0, 0);
+    }
+    100% {
+        background-color: rgb(21, 255, 0);
+    }
+}
+.allusers_dashboard_graph_digital_td_ {
+    min-width: 200px;
+}
+.allusers_dashboard_graph_digital_td_ > button {
+    width: 30%;
+    margin: 2px;
+    border: none;
+    outline: none;
+    background: white;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.278);
+}
+.allusers_dashboard_graph_digital_td_ > button:nth-child(1) {
+    background: #34495e;
+    color: white;
+}
+.allusers_dashboard_graph_digital_td_ > button:nth-child(2) {
+    background: red;
+    color: white;
+}
+.allusers_dashboard_graph_digital_td_ > button:nth-child(3) {
+    background: #34495e;
+    color: white;
+}
+/* all users style ends here  */
+
+/* Report section starts here */
+
+._allusers_topic_based_report_title_section {
+    display: flex;
+    justify-content: space-between;
+    width: 97vw;
+    padding: 10px 15px;
+    font-size: 20px;
+    color: gray;
+}
+._allusers_topic_based_report_input_container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 10px 0;
+    flex-wrap: wrap;
+}
+._allusers_topic_based_report_datepicker_input input {
+    border-radius: 5px;
+    border: 2px solid rgba(128, 128, 128, 0.308);
+    outline: none;
+    text-align: center;
+}
+._allusers_topic_based_report_minvalue_input input {
+    border-radius: 5px;
+    border: 2px solid rgba(128, 128, 128, 0.308);
+    outline: none;
+    width: 70px;
+    padding-left: 10px;
+    text-align: center;
+}
+._allusers_topic_based_report_minvalue_input input::placeholder {
+    font-size: 14px;
+}
+.__allusers_topic_based_report_button-container {
+    display: flex;
+    gap: 8px;
+}
+.__allusers_topic_based_report_button-container > button {
+    border: none;
+    outline: none;
+    font-size: 14px;
+    border-radius: 4px;
+    transition: all 0.3s ease-in-out;
+}
+.__allusers_topic_based_report_button-container > button:first-child {
+    background: red;
+    color: white;
+    height: 30px;
+    width: 80px;
+}
+.__allusers_topic_based_report_button-container > button:first-child:hover {
+    background: rgb(195, 0, 0);
+}
+.__allusers_topic_based_report_button-container > button:last-child {
+    background: blue;
+    color: white;
+    height: 30px;
+    width: 120px;
+}
+.__allusers_topic_based_report_button-container > button:last-child:hover {
+    background: rgb(0, 0, 186);
+}
+/* Report section ends here */
+
+.graph_shadow {
+    box-sizing: 0 0 4px black !important;
+}
+.threshold-label {
+    background: white;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    padding: 2px 5px;
+    font-size: 12px;
+    font-weight: bold;
+    position: absolute;
+    pointer-events: none; /* Prevent mouse events on the label */
+}
+@media (width < 700px) {
+    .users_small_graphs_secondary_container {
+        width: 340px;
+    }
+    ._editgraph_graph_container {
+        grid-template-columns: 100%;
+    }
+    ._editgraph_graph__right {
+        padding: 35px 0;
+    }
+    .allusers_change_password_container > div {
+        width: 100vw;
+        margin: 0 10px;
+    }
+    .alluser_alloperators_container {
+        margin-bottom: 60px;
+    }
+    .alluser_alloperators_table > thead > tr > th {
+        font-size: 16px;
+        padding: 12px 16px;
+        font-weight: 400;
+    }
+    .alluser_alloperators_table > tbody > tr > td {
+        font-size: 15px;
+        padding: 12px 8px;
+    }
+    .singleuserdashboard_main_container > div:first-child {
+        width: 97vw;
+    }
+    .allusers_layoutview_section{
+        grid-template-columns: 100% !important;
+    }
+}
+
+/* LayoutView style starts here */
+.allusers_layoutview_header {
+    width: 97dvw;
+    background: rgb(25, 30, 49);
+    color: white;
+    margin: 8px 0;
+    padding: 8px 0;
+    text-align: center;
+    position: relative;
+}
+.allusers_layoutview_close_icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: orange;
+    margin-right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+.allusers_layoutview_section {
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+.allusers_layoutview_section > div {
+    height: 310px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.256);
+    overflow: hidden;
+}
+.allusers_layoutview_numaric_container > div {
+    display: flex;
+    flex-direction: row;
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap");
+
+.allusers_layoutview_numaric_container > div > h3 {
+    font-size: 80px;
+    width: 100%;
+    margin: 0;
+    font-weight: 400;
+    text-align: center;
+    /* font-family: "Abril Fatface", serif; */
+}
+.allusers_layoutview_numaric_container > div > p {
+    margin: 0 5px;
+    width: 100%;
+    height: 88px;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    font-size: 25px;
+    font-family: "Courier New", Courier, monospace;
+}
+.allusers_layoutview_live_graph_container {
+    height: 310px;
+    overflow: hidden;
+    margin: 10px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.256);
+}
+/* LayoutView style ends here */
+
+/* manager graphs style starts here */
+/* style.css */
+/* style.css */
+.manager_graphs_list_main_container {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: #f4f7fa;
+  }
+  
+  .manager_graph_avg_max_min_container {
+    display: grid;
+    grid-template-columns: 25% 75%;
+    max-height: 250px;
+    width: 97vw;
+    margin: 0 auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    background: #ffffff;
+    transition: transform 0.2s;
+  }
+  
+  .manager_graph_avg_max_min_container:hover {
+    transform: translateY(-5px);
+  }
+  
+  ._manager_graph_container {
+    height: 250px !important;
+    overflow: hidden;
+    background: #fff;
+  }
+  
+  .manager_graph_avg_max_min_second_container {
+    background: #2c3e50;
+    color: #ecf0f1;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    position: relative;
+  }
+  
+ .manager_graph_avg_max_min_second_container_header {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  background: #e74c3c;
+  font-weight: 600;
+  font-size: 16px;
+  border-bottom: 2px solid #c0392b;
+
+  /* Remove justify-content: flex-end */
+  /* text-align: center; */ /* already removed */
+}
+
+.manager_graph_avg_max_min_second_container_header span {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap; /* Optional: prevent breaking */
+}
+
+.manager_graph_avg_max_min_second_container_header h6 {
+  margin-left: auto;
+  padding-right: 10px; /* optional spacing */
+  white-space: nowrap; /* Optional */
+}
+
+  
+  .filter-dropdown {
+    margin: 10px 0;
+    text-align: center;
+  }
+  
+  .filter-dropdown select {
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: none;
+    background: #34495e;
+    color: #ecf0f1;
+    font-size: 14px;
+    cursor: pointer;
+    width: 80%;
+  }
+  
+  .filter-dropdown select:focus {
+    outline: none;
+    box-shadow: 0 0 4px #3498db;
+  }
+  
+  .manager_graphs_average_container {
+    text-align: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #34495e;
+  }
+  
+  .manager_graphs_average_container div:first-child {
+    font-weight: bold;
+    color: #3498db;
+  }
+  
+  .manager_graph_min_max_container {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+  }
+  
+  .manager_graph_min_container,
+  .manager_graph_max_container {
+    text-align: center;
+    font-size: 14px;
+  }
+  
+  .manager_graph_min_container div:first-child,
+  .manager_graph_max_container div:first-child {
+    font-weight: bold;
+    color: #e67e22;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .manager_graph_avg_max_min_container {
+      grid-template-columns: 30% 70%;
+      display: flex;
+      flex-direction: column-reverse;
+      border: 2px solid rgba(0, 0, 0, 0.253);
+      width: 95vw;
+    }
+  
+    .manager_graph_avg_max_min_second_container {
+      font-size: 14px;
+      padding: 10px;
+    }
+  
+    .filter-dropdown select {
+      width: 90%;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .manager_graph_avg_max_min_container {
+      grid-template-columns: 1fr;
+      display: flex;
+      flex-direction: column-reverse;
+      max-height: none;
+      width: 90vw;
+    }
+  
+    ._manager_graph_container {
+      height: 200px !important;
+    }
+  
+    .manager_graph_min_max_container {
+      flex-direction: column;
+      gap: 10px;
+    }
+  
+    .manager_graph_avg_max_min_second_container {
+      padding-bottom: 20px;
+    }
+  }
+/* manager graphs style ends here */
+
+/* Container for all controls */
+._report_controls_container {
+  padding: 20px;
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  margin-bottom: 20px;
+}
+
+/* Common label styling */
+._report_label {
+  color: #e0e0e0;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Date and Filter Row */
+._report_date_filter_row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px; /* Added gap for spacing between items */
+}
+
+/* Datepicker Wrapper */
+._report_datepicker_wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 180px;
+  margin: 0 5px; /* Reduced margin for smaller screens */
+}
+
+._report_datepicker {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #4b5e91;
+  border-radius: 8px;
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  box-sizing: border-box; /* Ensure padding doesn't increase width */
+}
+
+._report_datepicker:focus {
+  border-color: #00d4ff;
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+  outline: none;
+}
+
+/* Filter Selector */
+._report_filter_selector {
+  flex: 1;
+  min-width: 180px;
+  margin: 0 5px; /* Added margin for consistency */
+}
+
+._report_dropdown {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #4b5e91;
+  border-radius: 8px;
+  background: #0f172a;
+  color: #e0e0e0;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-sizing: border-box; /* Ensure padding doesn't increase width */
+}
+
+._report_dropdown:hover,
+._report_dropdown:focus {
+  border-color: #ff007a;
+  box-shadow: 0 0 10px rgba(255, 0, 122, 0.5);
+}
+
+/* Custom Range Inputs */
+._report_custom_range {
+  display: flex;
+  gap: 15px; /* Reduced gap for mobile */
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+._report_input_group {
+  flex: 1;
+  min-width: 150px;
+  margin: 0 5px; /* Added margin for consistency */
+}
+
+._report_number_input {
+  width: 100%;
+  padding: 8px;
+  border: 2px solid #4b5e91;
+  border-radius: 6px;
+  background: #0f172a;
+  color: #e0e0e0;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  box-sizing: border-box; /* Ensure padding doesn't increase width */
+}
+
+._report_number_input:focus {
+  border-color: #00ffab;
+  box-shadow: 0 0 10px rgba(0, 255, 171, 0.5);
+  outline: none;
+}
+
+/* Additional Filters */
+._report_additional_filters {
+  display: flex;
+  gap: 15px; /* Reduced gap for mobile */
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+/* Tagname Selector */
+._report_tagname_selector {
+  margin-bottom: 20px;
+}
+
+._report_tagname_list {
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 10px;
+  background: #0f172a;
+  border: 2px solid #4b5e91;
+  border-radius: 10px;
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+._report_tagname_card {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  margin: 5px 0;
+  background: #1e293b;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+._report_tagname_card:hover {
+  background: #334155;
+  transform: translateX(5px);
+}
+
+._report_checkbox {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #00d4ff;
+  border-radius: 4px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+._report_checkbox:checked {
+  background: #00d4ff;
+  border-color: #00d4ff;
+  box-shadow: 0 0 8px rgba(0, 212, 255, 0.7);
+}
+
+._report_checkbox:checked::after {
+  content: "✔";
+  color: #0f172a;
+  font-size: 12px;
+  position: relative;
+  top: -2px;
+  left: 2px;
+}
+
+._report_tagname_text {
+  color: #e0e0e0;
+  font-size: 14px;
+}
+
+/* Button Group */
+._report_button_group {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap; /* Allow buttons to wrap on small screens */
+  justify-content: center; /* Center buttons on mobile */
+}
+
+._report_submit_btn,
+._report_download_btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px; /* Ensure buttons don’t shrink too much */
+}
+
+._report_submit_btn {
+  background: linear-gradient(90deg, #ff007a, #ff5e62);
+  color: #ffffff;
+}
+
+._report_download_btn {
+  background: linear-gradient(90deg, #00d4ff, #00ffab);
+  color: #0f172a;
+}
+
+._report_submit_btn:hover,
+._report_download_btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+._report_submit_btn:active,
+._report_download_btn:active {
+  transform: scale(0.98);
+}
+
+/* Loading Indicator */
+._report_loading_indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: #e0e0e0;
+  font-size: 18px;
+}
+
+._report_progress_bar {
+  width: 80%; /* Responsive width */
+  max-width: 300px; /* Cap for larger screens */
+  height: 20px;
+  background: #0f172a;
+  border: 2px solid #4b5e91;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+._report_progress_fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00d4ff, #00ffab);
+  transition: width 0.5s ease;
+}
+
+/* Media Queries for Mobile Responsiveness */
+@media (max-width: 768px) {
+  ._report_controls_container {
+    padding: 15px; /* Reduce padding on smaller screens */
+  }
+
+  ._report_date_filter_row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  ._report_datepicker_wrapper,
+  ._report_filter_selector,
+  ._report_input_group {
+    margin: 0; /* Remove side margins for full width */
+    min-width: 100%; /* Full width on mobile */
+  }
+
+  ._report_additional_filters {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  ._report_tagname_list {
+    max-height: 150px; /* Reduce height on mobile */
+  }
+
+  ._report_button_group {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  ._report_submit_btn,
+  ._report_download_btn {
+    width: 100%; /* Full width buttons on mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  ._report_label {
+    font-size: 12px; /* Smaller font for labels */
+  }
+
+  ._report_datepicker,
+  ._report_dropdown,
+  ._report_number_input {
+    font-size: 12px; /* Smaller font for inputs */
+    padding: 8px; /* Adjust padding */
+  }
+
+  ._report_tagname_text {
+    font-size: 12px; /* Smaller font for tagname text */
+  }
+}
+/*updated report styles ends here*/
+
+.alluser_dropdown_companyswitch_ > select{
+    min-width: 250px;
+    border: 1px solid rgb(0, 195, 255);
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.159);
+}
+
+@media (width < 800px) {
+    .alluser_dashboard_controles_container{
+        justify-content: center;
+    }
+    .alluser_dropdown_companyswitch_{
+        width: 100%;
+        padding: 0 15px;
+    }
+    .alluser_dropdown_companyswitch_ > select{
+        text-align: center;
+        width: 100% !important;
+    }
+}

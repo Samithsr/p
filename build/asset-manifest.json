@@ -1,0 +1,27 @@
+{
+  "files": {
+    "main.css": "/static/css/main.0f55bbb4.css",
+    "main.js": "/static/js/main.d1dd5a06.js",
+    "static/js/453.cddcc98d.chunk.js": "/static/js/453.cddcc98d.chunk.js",
+    "static/media/signup_left_1.jpg": "/static/media/signup_left_1.e34ac51b92e60048c24b.jpg",
+    "static/media/layout2.png": "/static/media/layout2.2edb54828f9c9d432e4b.png",
+    "static/media/layout3.png": "/static/media/layout3.ab2d3d8597d3aefff87d.png",
+    "static/media/layout1.png": "/static/media/layout1.8594ee1f41ce1043901b.png",
+    "static/media/Type1.png": "/static/media/Type1.def7fa1810cacc652cdb.png",
+    "static/media/Type4.png": "/static/media/Type4.362b85dfcdedda72c64c.png",
+    "static/media/Type2.png": "/static/media/Type2.3c9595352470231e9f79.png",
+    "static/media/sarayu_logo_1.jpg": "/static/media/sarayu_logo_1.cf4143ae9e40ac337e5b.jpg",
+    "static/media/Type7.png": "/static/media/Type7.63d4613a4791eac95252.png",
+    "static/media/Type5.png": "/static/media/Type5.a178e21fd792e2e79533.png",
+    "static/media/Type6.png": "/static/media/Type6.da9a2554e84838980de2.png",
+    "static/media/Type3.png": "/static/media/Type3.2d4a756cd5e5b20cb2f4.png",
+    "index.html": "/index.html",
+    "main.0f55bbb4.css.map": "/static/css/main.0f55bbb4.css.map",
+    "main.d1dd5a06.js.map": "/static/js/main.d1dd5a06.js.map",
+    "453.cddcc98d.chunk.js.map": "/static/js/453.cddcc98d.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0f55bbb4.css",
+    "static/js/main.d1dd5a06.js"
+  ]
+}

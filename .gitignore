@@ -1,0 +1,38 @@
+# Editor settings
+.vscode/
+.idea/
+*.swp
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+*.log
+
+# Dependency caching
+.npm/
+.yarn/
+.pnp.cjs
+.pnp.loader.mjs
+
+# Storybook build output
+.storybook-out/
+
+# Next.js build output (if using Next.js)
+.next/
+
+# Parcel cache
+.cache/
+
+# Jest snapshots
+*.snap
+
+# TypeScript build
+*.tsbuildinfo
+
+# Ignore lockfiles (optional, if not using a specific package manager lock)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+node_modules
