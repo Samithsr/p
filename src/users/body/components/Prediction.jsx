@@ -35,13 +35,37 @@ const Prediction = () => {
       try {
         setIsLoading(true);
         setError(null);
+        
+        // Calculate time range based on selection
+        let startTime;
+        const now = Math.floor(Date.now() / 1000);
+        
+        switch(tf) {
+          case '1H':
+            startTime = now - 3600; // 1 hour ago
+            break;
+          case '1D':
+            startTime = now - 86400; // 1 day ago
+            break;
+          case '1W':
+            startTime = now - 604800; // 1 week ago
+            break;
+          case '1M':
+            startTime = now - 2592000; // 30 days (1 month) ago
+            break;
+          case '2h':
+          default:
+            startTime = now - 7200; // 2 hours ago (default)
+        }
 
+        // Fetch historical data with the calculated time range
         const response = await axios.get(
-          `/mqtt/prediction/${encodeURIComponent(topic)}?timeframe=${tf}`
+          `/mqtt/prediction/${encodeURIComponent(topic)}?start_time=${startTime}`
         );
+        
         const { historical, predictions } = response.data.data;
 
-        // Sort & dedupe historical
+        // Sort & dedupe historical data
         const sorted = [...historical]
           .sort((a, b) => a.time - b.time)
           .filter((p, i, arr) => i === 0 || p.time > arr[i - 1].time);
@@ -49,10 +73,15 @@ const Prediction = () => {
         baseData.current = sorted;
         predictiveData.current = [...sorted, ...predictions];
 
-        if (chart.current && sorted.length > 0) {
-          liveSeries.current.setData(sorted);
-          predictiveSeries.current.setData(predictiveData.current);
-          updateThresholdLine();
+        if (chart.current) {
+          if (sorted.length > 0) {
+            liveSeries.current.setData(sorted);
+            predictiveSeries.current.setData(predictiveData.current);
+            updateThresholdLine();
+            estimateThresholdReachTime();
+          }
+          // Adjust the visible range to show the selected time frame
+          chart.current.timeScale().fitContent();
         }
       } catch (err) {
         console.error('Error fetching data:', err);
@@ -99,7 +128,12 @@ const Prediction = () => {
   const handleTimeFrameChange = async (newTimeFrame) => {
     if (newTimeFrame === timeFrame || isLoading) return;
     setTimeFrame(newTimeFrame);
-    await fetchInitialData(newTimeFrame);
+    try {
+      await fetchInitialData(newTimeFrame);
+    } catch (err) {
+      console.error('Error changing time frame:', err);
+      setError('Failed to update time frame');
+    }
   };
 
   // === SOCKET.IO SETUP ===
@@ -123,7 +157,7 @@ const Prediction = () => {
   socketInstance.on('connect_error', () => setError('Connection failed'));
 
   return () => {
-    socketInstance.emit('unsubscribeFromTop  ic', topic);
+    socketInstance.emit('unsubscribeFromTopic', topic);
     socketInstance.disconnect();
   };
 }, [topic]);

@@ -38,6 +38,8 @@ const Dashboard = () => {
   const RATE_LIMIT_MS = 120000;
 
   const handlePredictionClick = (topic) => {
+    localStorage.setItem('predictionTopic', topic);
+    window.dispatchEvent(new Event('prediction-topic-changed'));
     // Navigate to prediction page with the selected topic as a query parameter
     navigate(`/allusers/prediction?topic=${encodeURIComponent(topic)}`);
   };

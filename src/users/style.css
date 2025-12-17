@@ -1450,7 +1450,7 @@
 /*updated report styles ends here*/
 
 .alluser_dropdown_companyswitch_ > select{
-    min-width: 250px;
+    min-width: 300px;
     border: 1px solid rgb(0, 195, 255);
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.159);
 }

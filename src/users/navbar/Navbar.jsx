@@ -13,7 +13,7 @@ import apiClient from "../../api/apiClient";
 import { toast } from "react-toastify";
 import { PiBuildingOfficeBold } from "react-icons/pi";
 import ChangePassword from "./../body/components/ChangePassword";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { HiMiniBuildingOffice } from "react-icons/hi2";
 import { FaUser } from "react-icons/fa";
 import { navHeaderContaxt } from "../../contaxts/navHeaderContaxt";
@@ -25,12 +25,15 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const { showMenu } = useSelector((state) => state.NavBarSlice);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [loggedInUser, setLoggedInUser] = useState({});
   const [localLoading, setLocalLoading] = useState(false);
   const [changePasswordModel, setChangePasswordModel] = useState(false);
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
   const [toggleDetails, setToggleDetails] = useState(false);
+  const [predictionTopic, setPredictionTopic] = useState("");
+  const [showPredictionNav, setShowPredictionNav] = useState(false);
   const { navHeader } = useContext(navHeaderContaxt);
 
   useEffect(() => {
@@ -45,6 +48,26 @@ const Navbar = () => {
     }, 1000);
     return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    const handlePredictionTopicChanged = () => {
+      setPredictionTopic(localStorage.getItem('predictionTopic') || "");
+      setShowPredictionNav(true);
+    };
+
+    window.addEventListener('prediction-topic-changed', handlePredictionTopicChanged);
+    return () => window.removeEventListener('prediction-topic-changed', handlePredictionTopicChanged);
+  }, []);
+
+  useEffect(() => {
+    setShowPredictionNav(false);
+  }, []);
+
+  useEffect(() => {
+    if (location.pathname !== "/allusers/graphs") {
+      setShowPredictionNav(false);
+    }
+  }, [location.pathname]);
 
   const formattedDate = currentDateTime.toLocaleDateString("en-GB", {
     day: "2-digit",
@@ -148,10 +171,17 @@ const Navbar = () => {
           <NavLink className={"users_navbar_link"} to={"/allusers/gatewaystat"}>
             Gateway
           </NavLink>
-          <div className="users_navbar_link_separator"></div>
-          <NavLink className={"users_navbar_link"} to={"/allusers/prediction"}>
-            Prediction
-          </NavLink>
+          {location.pathname === "/allusers/graphs" && showPredictionNav && predictionTopic && (
+            <>
+              <div className="users_navbar_link_separator"></div>
+              <NavLink
+                className={"users_navbar_link"}
+                to={`/allusers/prediction?topic=${encodeURIComponent(predictionTopic)}`}
+              >
+                Prediction
+              </NavLink>
+            </>
+          )}
             </>
             )}
           {user.role === "supervisor" && (
@@ -238,6 +268,15 @@ const Navbar = () => {
             >
               Report
             </NavLink>
+            {user?.role === "supervisor" && location.pathname === "/allusers/graphs" && showPredictionNav && predictionTopic && (
+              <NavLink
+                className={"users_mobile_navbar_show_menu_navlink"}
+                to={`/allusers/prediction?topic=${encodeURIComponent(predictionTopic)}`}
+                onClick={() => dispatch(handlToggleMenu(false))}
+              >
+                Prediction
+              </NavLink>
+            )}
             {user.role === "supervisor" && (
               <NavLink
                 className={"users_mobile_navbar_show_menu_navlink"}
