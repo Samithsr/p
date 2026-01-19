@@ -57,6 +57,7 @@ const ViewGraph = () => {
     >
       <header>
         <div style={{ flex: 1 }}>{topicLabel}</div>
+        {/* Time frame buttons commented out
         <div style={{ display: 'flex', gap: '5px', marginRight: '10px' }}>
           {timeFrameButtons.map((tf) => (
             <button
@@ -76,6 +77,7 @@ const ViewGraph = () => {
             </button>
           ))}
         </div>
+        */}
         <div onClick={() => navigate(-1)} style={{ cursor: 'pointer' }}>
           <IoClose />
         </div>

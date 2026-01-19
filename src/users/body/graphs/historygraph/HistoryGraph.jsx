@@ -79,7 +79,10 @@ const HistoryGraph = ({ topic, height, topicLabel }) => {
 
     return () => {
       window.removeEventListener("resize", handleResize);
-      if (chartRef.current) chartRef.current.remove();
+      if (chartRef.current && !chartRef.current._disposed) {
+        chartRef.current.remove();
+        chartRef.current = null;
+      }
     };
   }, [height]);
 

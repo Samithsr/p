@@ -256,7 +256,7 @@ const SmallGraph = ({ topic, height, viewgraph }) => {
 
       return () => {
         window.removeEventListener("resize", handleResize);
-        if (chartRef.current) {
+        if (chartRef.current && !chartRef.current._disposed) {
           chartRef.current.remove();
           chartRef.current = null;
           isChartInitialized.current = false;

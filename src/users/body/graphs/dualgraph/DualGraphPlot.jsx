@@ -85,7 +85,7 @@ const DualGraphPlot = ({ topic1, topic2, topic3, topic4, topic5, height, width }
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
-      if (chartRef.current) {
+      if (chartRef.current && !chartRef.current._disposed) {
         chartRef.current.remove();
         chartRef.current = null;
         isChartInitialized.current = false;

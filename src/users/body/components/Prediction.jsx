@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { createChart, CrosshairMode, LineStyle } from 'lightweight-charts';
-import axios from 'axios';
+import apiClient from '../../../api/apiClient';
 import { io } from 'socket.io-client';
 import { useLocation } from 'react-router-dom';
 
@@ -15,7 +15,7 @@ const Prediction = () => {
 
   const [threshold, setThreshold] = useState(99);
   const [thresholdReachTime, setThresholdReachTime] = useState(null);
-  const [timeFrame, setTimeFrame] = useState('2h');
+  const [timeFrame, setTimeFrame] = useState('2H');
   const [isLoading, setIsLoading] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState(null);
@@ -27,61 +27,253 @@ const Prediction = () => {
 
   const formatDate = (date) => Math.floor(new Date(date).getTime() / 1000);
 
+  // === DATABASE FUNCTIONS ===
+  const savePredictionToDatabase = async (liveValue, predictedValue, timestamp, thresholdReached = false, thresholdReachTime = null, estimatedReachTime = null) => {
+    try {
+      const response = await apiClient.post('/prediction/save-prediction', {
+        topic,
+        liveValue,
+        predictedValue,
+        threshold,
+        timestamp,
+        thresholdReached,
+        thresholdReachTime,
+        estimatedReachTime
+      });
+      
+      console.log('Prediction saved to database:', response.data);
+    } catch (error) {
+      console.error('Error saving prediction to database:', error);
+    }
+  };
+
+  const saveBatchPredictionsToDatabase = async (predictions) => {
+    try {
+      const response = await apiClient.post('/prediction/save-batch-predictions', {
+        topic,
+        predictions,
+        threshold
+      });
+      
+      console.log('Batch predictions saved to database:', response.data);
+    } catch (error) {
+      console.error('Error saving batch predictions to database:', error);
+    }
+  };
+
+  const loadPredictionFromDatabase = async () => {
+    try {
+      const response = await apiClient.get(`/prediction/get-prediction/${encodeURIComponent(topic)}`);
+      
+      if (response.data.success && response.data.data) {
+        const predictionData = response.data.data;
+        setThreshold(predictionData.threshold || 99);
+        
+        // Load prediction history if available
+        if (predictionData.predictionHistory && predictionData.predictionHistory.length > 0) {
+          const historyData = predictionData.predictionHistory.map(point => ({
+            time: point.timestamp,
+            value: point.predictedValue
+          }));
+          predictiveData.current = historyData;
+          if (predictiveSeries.current) {
+            predictiveSeries.current.setData(historyData);
+          }
+        }
+
+        // Set current prediction info
+        if (predictionData.currentPrediction) {
+          const { thresholdReached, thresholdReachTime, estimatedReachTime } = predictionData.currentPrediction;
+          if (thresholdReachTime) {
+            setThresholdReachTime(thresholdReachTime);
+          } else if (estimatedReachTime) {
+            setThresholdReachTime(estimatedReachTime);
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error loading prediction from database:', error);
+    }
+  };
+
+  const toUnixSeconds = (input) => {
+    if (input === null || input === undefined) return null;
+    if (typeof input === 'number' && Number.isFinite(input)) return Math.floor(input);
+    if (typeof input === 'string') {
+      const asNum = Number(input);
+      if (Number.isFinite(asNum)) return Math.floor(asNum);
+      const d = new Date(input);
+      const ms = d.getTime();
+      return Number.isFinite(ms) ? Math.floor(ms / 1000) : null;
+    }
+    if (input instanceof Date) {
+      const ms = input.getTime();
+      return Number.isFinite(ms) ? Math.floor(ms / 1000) : null;
+    }
+    if (typeof input === 'object') {
+      if (Object.prototype.hasOwnProperty.call(input, 'time')) return toUnixSeconds(input.time);
+      if (Object.prototype.hasOwnProperty.call(input, 'timestamp')) return toUnixSeconds(input.timestamp);
+      if (
+        Object.prototype.hasOwnProperty.call(input, 'year') &&
+        Object.prototype.hasOwnProperty.call(input, 'month') &&
+        Object.prototype.hasOwnProperty.call(input, 'day')
+      ) {
+        const d = new Date(Date.UTC(input.year, input.month - 1, input.day));
+        const ms = d.getTime();
+        return Number.isFinite(ms) ? Math.floor(ms / 1000) : null;
+      }
+    }
+    return null;
+  };
+
+  const normalizePoints = (points) => {
+    const mapped = (Array.isArray(points) ? points : [])
+      .map((p) => {
+        if (!p) return null;
+        const t = toUnixSeconds(p.time ?? p.timestamp);
+        const v = Number(p.value ?? p.message);
+        if (!Number.isFinite(t) || !Number.isFinite(v)) return null;
+        return { time: t, value: v };
+      })
+      .filter(Boolean)
+      .sort((a, b) => a.time - b.time);
+
+    const out = [];
+    for (const p of mapped) {
+      if (out.length === 0 || p.time > out[out.length - 1].time) {
+        out.push(p);
+      } else if (p.time === out[out.length - 1].time) {
+        out[out.length - 1] = p;
+      }
+    }
+    return out;
+  };
+
+  const normalizeTimeFrame = (tf) => {
+    if (tf === '2H') return '2h';
+    if (tf === '8H') return '8h';
+    return tf;
+  };
+
+  const timeframeToSeconds = (tf) => {
+    switch (tf) {
+      case '2H':
+        return 7200;
+      case '8H':
+        return 28800;
+      case '1D':
+        return 86400;
+      case '1W':
+        return 604800;
+      case '1M':
+        return 2592000;
+      case '2h':
+      default:
+        return 7200;
+    }
+  };
+
   const socket = useRef();
   // === FETCH INITIAL DATA (PER TOPIC) ===
   const fetchInitialData = useCallback(
-    async (tf = timeFrame) => { 
+    async (tf) => {
       if (!topic) return;
       try {
         setIsLoading(true);
         setError(null);
-        
-        // Calculate time range based on selection
-        let startTime;
-        const now = Math.floor(Date.now() / 1000);
-        
-        switch(tf) {
-          case '1H':
-            startTime = now - 3600; // 1 hour ago
-            break;
-          case '1D':
-            startTime = now - 86400; // 1 day ago
-            break;
-          case '1W':
-            startTime = now - 604800; // 1 week ago
-            break;
-          case '1M':
-            startTime = now - 2592000; // 30 days (1 month) ago
-            break;
-          case '2h':
-          default:
-            startTime = now - 7200; // 2 hours ago (default)
+
+        const effectiveTf = tf ?? '2H';
+        const normalizedTf = normalizeTimeFrame(effectiveTf);
+
+        let history = [];
+        if (effectiveTf === '2H') {
+          const toDate = new Date();
+          const fromDate = new Date(toDate.getTime() - 2 * 60 * 60 * 1000);
+          const body = {
+            topic,
+            from: fromDate.toISOString(),
+            to: toDate.toISOString(),
+            granularity: 'seconds',
+            sortOrder: 'asc',
+            limit: 10000,
+            aggregationMethod: 'average',
+          };
+
+          const rangeRes = await apiClient.post('/mqtt/realtime-data/custom-range', body);
+          if (rangeRes.data?.success && Array.isArray(rangeRes.data.messages)) {
+            history = rangeRes.data.messages
+              .map((m) => {
+                const t = toUnixSeconds(m.timestamp);
+                const v = Number(m.message);
+                if (!Number.isFinite(t) || !Number.isFinite(v)) return null;
+                return { time: t, value: v };
+              })
+              .filter(Boolean);
+          }
         }
 
-        // Fetch historical data with the calculated time range
-        const response = await axios.get(
-          `/mqtt/prediction/${encodeURIComponent(topic)}?start_time=${startTime}`
-        );
-        
-        const { historical, predictions } = response.data.data;
+        const limit = normalizedTf === '1M' ? 10000 : normalizedTf === '1W' ? 8000 : normalizedTf === '1D' ? 5000 : (normalizedTf === '2h' || normalizedTf === '2H' || normalizedTf === '8H') ? 10000 : 2000;
 
-        // Sort & dedupe historical data
-        const sorted = [...historical]
+        const response = await apiClient.get(
+          `/mqtt/prediction/${encodeURIComponent(topic)}?timeframe=${encodeURIComponent(normalizedTf)}&limit=${limit}`
+        );
+
+        const { historyGraphData, predictionGraphData, predictions, historical } = response.data.data;
+
+        const apiHistoryRaw = Array.isArray(historyGraphData) ? historyGraphData : (Array.isArray(historical) ? historical : []);
+        const predictionBaseRaw = Array.isArray(predictionGraphData) ? predictionGraphData : [];
+
+        const apiHistory = apiHistoryRaw
+          .map((p) => {
+            const t = toUnixSeconds(p?.time ?? p?.timestamp);
+            const v = Number(p?.value ?? p?.message);
+            if (!Number.isFinite(t) || !Number.isFinite(v)) return null;
+            return { time: t, value: v };
+          })
+          .filter(Boolean);
+
+        const predictionBase = predictionBaseRaw
+          .map((p) => {
+            const t = toUnixSeconds(p?.time ?? p?.timestamp);
+            const v = Number(p?.value ?? p?.message);
+            if (!Number.isFinite(t) || !Number.isFinite(v)) return null;
+            return { time: t, value: v };
+          })
+          .filter(Boolean);
+
+        if (history.length === 0) history = apiHistory;
+
+        const sortedHistory = normalizePoints(history);
+
+        const sortedPredictionBase = [...predictionBase]
           .sort((a, b) => a.time - b.time)
           .filter((p, i, arr) => i === 0 || p.time > arr[i - 1].time);
 
-        baseData.current = sorted;
-        predictiveData.current = [...sorted, ...predictions];
+        const normalizedPredictions = (Array.isArray(predictions) ? predictions : [])
+          .map((p) => {
+            const t = toUnixSeconds(p?.time ?? p?.timestamp);
+            const v = Number(p?.value ?? p?.message);
+            if (!Number.isFinite(t) || !Number.isFinite(v)) return null;
+            return { time: t, value: v };
+          })
+          .filter(Boolean);
+
+        baseData.current = sortedHistory;
+        predictiveData.current = normalizePoints([...sortedPredictionBase, ...normalizedPredictions]);
 
         if (chart.current) {
-          if (sorted.length > 0) {
-            liveSeries.current.setData(sorted);
-            predictiveSeries.current.setData(predictiveData.current);
+          if (sortedHistory.length > 0) {
+            liveSeries.current.setData(normalizePoints(sortedHistory));
+            predictiveSeries.current.setData(normalizePoints(predictiveData.current));
             updateThresholdLine();
             estimateThresholdReachTime();
           }
-          // Adjust the visible range to show the selected time frame
-          chart.current.timeScale().fitContent();
+          const windowSeconds = timeframeToSeconds(effectiveTf);
+          const lastDataTime = sortedHistory.length > 0 ? sortedHistory[sortedHistory.length - 1].time : Math.floor(Date.now() / 1000);
+          chart.current.timeScale().setVisibleRange({
+            from: lastDataTime - windowSeconds,
+            to: lastDataTime + 300,
+          });
         }
       } catch (err) {
         console.error('Error fetching data:', err);
@@ -90,8 +282,15 @@ const Prediction = () => {
         setIsLoading(false);
       }
     },
-    [topic, timeFrame]
+    [topic]
   );
+
+  // === LOAD PREDICTION DATA FROM DATABASE ===
+  useEffect(() => {
+    if (topic) {
+      loadPredictionFromDatabase();
+    }
+  }, [topic]);
 
   // === SAFE THRESHOLD LINE UPDATE ===
   const updateThresholdLine = () => {
@@ -126,14 +325,14 @@ const Prediction = () => {
 
   // === TIMEFRAME CHANGE ===
   const handleTimeFrameChange = async (newTimeFrame) => {
-    if (newTimeFrame === timeFrame || isLoading) return;
+    if (isLoading) return;
     setTimeFrame(newTimeFrame);
     try {
       await fetchInitialData(newTimeFrame);
     } catch (err) {
       console.error('Error changing time frame:', err);
       setError('Failed to update time frame');
-    }
+    } 
   };
 
   // === SOCKET.IO SETUP ===
@@ -154,7 +353,7 @@ const Prediction = () => {
   });
 
   socketInstance.on('disconnect', () => setIsConnected(false));
-  socketInstance.on('connect_error', () => setError('Connection failed'));
+  // socketInstance.on('connect_error', () => setError('Connection failed'));
 
   return () => {
     socketInstance.emit('unsubscribeFromTopic', topic);
@@ -174,12 +373,25 @@ const Prediction = () => {
       const value = parseFloat(rawMessage);
       if (isNaN(value)) return;
 
-      const time = formatDate(timestamp);
+      const time = toUnixSeconds(timestamp);
+      if (!Number.isFinite(time)) return;
+
+      // Ensure our in-memory arrays are always numeric + ascending before we compare/update
+      baseData.current = normalizePoints(baseData.current);
+      predictiveData.current = normalizePoints(predictiveData.current);
+
+      if (baseData.current.length > 0 && typeof baseData.current[baseData.current.length - 1]?.time !== 'number') {
+        baseData.current = normalizePoints(baseData.current);
+        if (liveSeries.current) {
+          liveSeries.current.setData(baseData.current);
+        }
+      }
 
       // === PREVENT DUPLICATE OR OUT-OF-ORDER TIME ===
-      const lastTime = baseData.current.length > 0
+      const lastTimeRaw = baseData.current.length > 0
         ? baseData.current[baseData.current.length - 1].time
         : 0;
+      const lastTime = toUnixSeconds(lastTimeRaw) ?? 0;
 
       if (time <= lastTime) return; // Skip
 
@@ -193,7 +405,15 @@ const Prediction = () => {
       const trend = last5.length > 1 ? last5[last5.length - 1] - last5[0] : 0;
       const prediction = value + trend * 0.5 + (Math.random() - 0.5) * 2;
 
-      const predPoint = { time, value: prediction };
+      // IMPORTANT: predictive series already contains future points (from API predictions).
+      // If we update using the current live timestamp, it can be "older" than the last predicted point.
+      // So we always append at a time strictly greater than the last predictive point.
+      const lastPredTimeRaw =
+        predictiveData.current.length > 0 ? predictiveData.current[predictiveData.current.length - 1].time : time;
+      const lastPredTime = toUnixSeconds(lastPredTimeRaw) ?? time;
+      const nextPredTime = Math.max(lastPredTime, time) + 1;
+
+      const predPoint = { time: nextPredTime, value: prediction };
       predictiveData.current.push(predPoint);
       if (predictiveSeries.current) predictiveSeries.current.update(predPoint);
 
@@ -201,26 +421,51 @@ const Prediction = () => {
       updateThresholdLine();
       
       // Check if threshold is reached in current prediction
+      let thresholdReached = false;
+      let thresholdReachTimeStr = null;
+      let estimatedReachTimeStr = null;
+      
       if (prediction >= threshold) {
-        setThresholdReachTime(`Threshold reached at ${new Date(time * 1000).toLocaleTimeString()}`);
+        thresholdReachTimeStr = `Threshold reached at ${new Date(time * 1000).toLocaleTimeString()}`;
+        setThresholdReachTime(thresholdReachTimeStr);
+        thresholdReached = true;
       } else {
         // Only update estimate if we haven't reached threshold yet
         estimateThresholdReachTime();
+        // Get the current threshold reach time state for saving
+        thresholdReachTimeStr = thresholdReachTime;
+        estimatedReachTimeStr = thresholdReachTime;
       }
 
-      // === TRIM DATA ===
-      if (baseData.current.length > 200) {
+      // === SAVE PREDICTION TO DATABASE ===
+      savePredictionToDatabase(value, prediction, time, thresholdReached, thresholdReachTimeStr, estimatedReachTimeStr);
+
+      const windowSeconds = timeframeToSeconds(timeFrame);
+      const cutoff = time - windowSeconds;
+
+      let historyTrimmed = false;
+      while (baseData.current.length > 0 && baseData.current[0].time < cutoff) {
         baseData.current.shift();
-        predictiveData.current.shift();
-        liveSeries.current.setData([...baseData.current]);
-        predictiveSeries.current.setData([...predictiveData.current]);
+        historyTrimmed = true;
+      }
+      if (historyTrimmed && liveSeries.current) {
+        baseData.current = normalizePoints(baseData.current);
+        liveSeries.current.setData(baseData.current);
+      }
+
+      const predictionCutoff = time - 7200;
+      const beforeLen = predictiveData.current.length;
+      predictiveData.current = predictiveData.current.filter((p) => p.time >= predictionCutoff);
+      if (predictiveSeries.current && predictiveData.current.length !== beforeLen) {
+        predictiveData.current = normalizePoints(predictiveData.current);
+        predictiveSeries.current.setData(predictiveData.current);
       }
     };
 
     socket.current.on('liveMessage', handleLiveData);
 
     return () => socket.current.off('liveMessage', handleLiveData);
-  }, [threshold]);
+  }, [threshold, timeFrame]);
 
   // === ESTIMATE THRESHOLD REACH TIME ===
   const estimateThresholdReachTime = () => {
@@ -263,12 +508,23 @@ const Prediction = () => {
     const now = new Date();
     const oneDayInMs = 24 * 60 * 60 * 1000;
     
+    let estimateStr = '';
     if (reachTime > now && (reachTime - now) < oneDayInMs) {
-      setThresholdReachTime(`Estimated to reach at ${reachTime.toLocaleTimeString()}`);
+      estimateStr = `Estimated to reach at ${reachTime.toLocaleTimeString()}`;
+      setThresholdReachTime(estimateStr);
     } else if (reachTime > now) {
-      setThresholdReachTime('Estimated to reach in more than 24 hours');
+      estimateStr = 'Estimated to reach in more than 24 hours';
+      setThresholdReachTime(estimateStr);
     } else {
-      setThresholdReachTime('Not expected to reach threshold');
+      estimateStr = 'Not expected to reach threshold';
+      setThresholdReachTime(estimateStr);
+    }
+
+    // Save estimate to database if we have live data
+    if (baseData.current.length > 0) {
+      const lastPoint = baseData.current[baseData.current.length - 1];
+      const lastPredPoint = data[data.length - 1];
+      savePredictionToDatabase(lastPoint.value, lastPredPoint.value, lastPredPoint.time, false, null, estimateStr);
     }
   };
 
@@ -280,11 +536,18 @@ const Prediction = () => {
       setThreshold(val);
       updateThresholdLine();
       estimateThresholdReachTime();
+      
+      // Save threshold change to database
+      if (baseData.current.length > 0) {
+        const lastPoint = baseData.current[baseData.current.length - 1];
+        savePredictionToDatabase(lastPoint.value, lastPoint.value, lastPoint.time, false, null, thresholdReachTime);
+      }
     }
   };
 
   // === CHART INITIALIZATION ===
   useEffect(() => {
+    if (!topic) return;
     chart.current = createChart(chartContainerRef.current, {
       width: 1200,
       height: 400,
@@ -317,7 +580,8 @@ const Prediction = () => {
     // Start empty
     thresholdLine.current.setData([]);
    
-    fetchInitialData();
+    setTimeFrame('2H');
+    fetchInitialData('2H');
 
     const handleResize = () => {
       if (chartContainerRef.current) {
@@ -329,9 +593,12 @@ const Prediction = () => {
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      chart.current?.remove();
+      if (chart.current && !chart.current._disposed) {
+        chart.current.remove();
+        chart.current = null;
+      }
     };
-  }, [fetchInitialData]);
+  }, [topic]);
 
   const getButtonStyle = (tf) => ({
     padding: '4px 12px',
@@ -401,7 +668,7 @@ const Prediction = () => {
           </div>
 
           <div style={{ display: 'flex', gap: '8px' }}>
-            {['1H', '1D', '1W', '1M', '2h'].map((tf) => (
+            {['2H', '8H', '1D', '1W', '1M'].map((tf) => (
               <button
                 key={tf}
                 onClick={() => handleTimeFrameChange(tf)}
